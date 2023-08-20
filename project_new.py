@@ -6,26 +6,32 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-# Load the datasets
-tesla_df = pd.read_csv('./datasets/Tesla.csv - Tesla.csv.csv')
-hyundai_df = pd.read_csv('./datasets/005380.KS.csv')
 
-# Explore the data
-print("Tesla Stock Prices:")
-print(tesla_df.head())
-print("\nHyundai Stock Prices:")
-print(hyundai_df.head())
+# Load the datasets
+tesla_df = pd.read_csv('./datasets/new/redatasets/Tesla.csv')
+hyundai_df = pd.read_csv('./datasets/new/redatasets/Hyundai.csv')
+
+# Convert 'Date' column to datetime
+tesla_df['Date'] = pd.to_datetime(tesla_df['Date'])
+hyundai_df['Date'] = pd.to_datetime(hyundai_df['Date'])
+
+# Sort data by date
+tesla_df.sort_values('Date', inplace=True)
+hyundai_df.sort_values('Date', inplace=True)
 
 # Visualize the stock prices
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(20, 10))
+
 plt.plot(tesla_df['Date'], tesla_df['Close'], label='Tesla')
 plt.plot(hyundai_df['Date'], hyundai_df['Close'], label='Hyundai')
 plt.xlabel('Date')
 plt.ylabel('Closing Price')
 plt.title('Tesla vs Hyundai Stock Prices')
 plt.legend()
-plt.xticks(rotation=45)
+plt.xticks(rotation=45)  # Adjust rotation for better readability
+plt.tight_layout()  # Helps prevent cut-off labels
 plt.show()
+
 
 # Merge the datasets for comparison
 merged_df = pd.merge(tesla_df, hyundai_df, on='Date', suffixes=('_tesla', '_hyundai'))
